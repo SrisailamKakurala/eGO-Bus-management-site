@@ -1,8 +1,9 @@
 import React from 'react'
 
 const ManagementDashboard = () => {
+  console.log('dashboard')
   return (
-    <div>ManagementDashboard</div>
+    <h1 className='text-3xl text-white p-24'>ManagementDashboard</h1>
   )
 }
 

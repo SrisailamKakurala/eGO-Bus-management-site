@@ -1,11 +1,7 @@
-import React from 'react'
+import AppRoutes from './routes/AppRoutes';
 
 const App = () => {
-  return (
-    <h1 className="text-3xl font-bold underline font-['Ubuntu']">
-      Hello world!
-    </h1>
-  )
-}
+  return <AppRoutes />;
+};
 
-export default App
+export default App;
