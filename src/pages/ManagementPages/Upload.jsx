@@ -1,9 +1,7 @@
 import React, { useState } from "react";
 import { getDatabase, ref, set } from "firebase/database";
 import * as XLSX from "xlsx";
-import Lottie from "react-lottie"; // Import react-lottie
 import { app } from "../../configs/firebase.config";
-import animationData from "../../assets/animations/beat-uploadpage.json"; // Import your Lottie animation file
 
 const Upload = () => {
   const [progress, setProgress] = useState(0);
@@ -114,20 +112,43 @@ const Upload = () => {
     }
   };
 
-  const defaultOptions = {
-    loop: true,
-    autoplay: true,
-    animationData: animationData,
-    rendererSettings: {
-      preserveAspectRatio: "xMidYMid slice",
-    },
-  };
-
   return (
     <div className="h-auto p-6 bg-white rounded-lg shadow-md">
+
       <h1 className="text-4xl font-bold text-[#FCD32D]">Upload Data</h1>
       <hr className="border-t-1 border-gray-300 my-4" />
-      <p className="text-slate-600 mb-5">Please upload your Excel (.xlsx) file containing school data. <span className="text-black font-medium">Ensure all fields are properly filled.</span></p>
+
+      {/* Download Sample File */}
+      <div className="mt-4 mb-5">
+        <h2 className="text-2xl font-bold text-gray-800 mb-4">
+          Download Sample Excel Sheet
+        </h2>
+        <p className="text-gray-600 mb-8">
+          Click below to download a sample Excel file to use as a reference for
+          uploading data.
+        </p>
+        <a
+          href="/eGO_Bus_Flat_Structure.xlsx"
+          download
+          className="bg-[#FCD32D] font-semibold text-white py-3 px-4  rounded-lg hover:bg-yellow-400 transition duration-300"
+        >
+          Download Sample File
+        </a>
+      </div>
+
+      <hr className="mt-12" />
+
+
+
+      {/* uploading file */}
+      <p className="text-slate-600 mb-5 mt-8">
+        Please upload your Excel (.xlsx) file containing school data.{" "}
+        <span className="text-black font-medium">
+          Ensure all fields are properly filled.
+        </span>
+      </p>
+
+      {/* File Upload */}
       <div className="mb-6">
         <input
           type="file"
@@ -136,6 +157,8 @@ const Upload = () => {
           className="block w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FCD32D]"
         />
       </div>
+
+      {/* Progress Indicator */}
       <div className="mb-4">
         <progress
           value={progress}
@@ -143,15 +166,22 @@ const Upload = () => {
           className="w-full h-4 rounded-lg overflow-hidden"
           style={{ backgroundColor: "#F5F5F5" }}
         ></progress>
-        {progress > 0 && <p className="mt-2 text-gray-600">Progress: {progress}%</p>}
+        {progress > 0 && (
+          <p className="mt-2 text-gray-600">Progress: {progress}%</p>
+        )}
       </div>
-      {uploadStatus && <p className="mt-2 text-lg font-semibold text-[#FCD32D]">{uploadStatus}</p>}
+
+      {/* Upload Status */}
+      {uploadStatus && (
+        <p className="mt-2 text-lg font-semibold text-green-500">
+          {uploadStatus}
+        </p>
+      )}
       {error && <p className="mt-2 text-red-500">Error: {error}</p>}
 
-      {/* Lottie animation at the bottom */}
-      <div className="my-12 flex justify-center h-auto w-auto">
-        <Lottie options={defaultOptions} height={200} width='auto' />
-      </div>
+
+
+
     </div>
   );
 };

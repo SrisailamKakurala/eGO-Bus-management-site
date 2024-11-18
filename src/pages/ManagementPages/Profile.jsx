@@ -1,12 +1,22 @@
 import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSchool, faMapMarkerAlt, faBus, faUserGraduate, faRoute } from "@fortawesome/free-solid-svg-icons";
-
+import Lottie from "react-lottie"; // Import react-lottie
+import animationData from "../../assets/animations/beat-uploadpage.json";
 
 const Profile = ({ schoolData }) => {
   const [busesCount, setBusesCount] = useState(0);
   const [studentsCount, setStudentsCount] = useState(0);
   const [tripsCount, setTripsCount] = useState(0);
+
+  const defaultOptions = {
+    loop: true,
+    autoplay: true,
+    animationData: animationData,
+    rendererSettings: {
+      preserveAspectRatio: "xMidYMid slice",
+    },
+  };
 
   useEffect(() => {
     if (schoolData) {
@@ -103,6 +113,10 @@ const Profile = ({ schoolData }) => {
         </div>
       </div>
 
+      {/* Animation */}{/* Lottie animation at the bottom */}
+      <div className="my-12 flex justify-center h-auto w-auto">
+        <Lottie options={defaultOptions} height={200} width='auto' />
+      </div>
     </div>
   );
 };
