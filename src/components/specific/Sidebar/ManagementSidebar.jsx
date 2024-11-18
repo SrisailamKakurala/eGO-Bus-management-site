@@ -6,16 +6,28 @@ import {
   faUserGraduate,
   faUser,
   faUpload,
-  faSignOutAlt
+  faSignOutAlt,
+  faUserCircle,
+  faDriversLicense
 } from "@fortawesome/free-solid-svg-icons";
+import logo from "../../../assets/images/logo.png";
+
 
 const Sidebar = () => {
   return (
-    <div className="h-screen w-64 bg-[#FCD32D] text-slate-900 flex flex-col shadow-xl pt-20">
+    <div className="h-screen w-64 bg-[#FCD32D] text-slate-900 flex flex-col shadow-xl pt-50">
+
+      {/* logo */}
+      <div className="flex items-center m-auto py-5">
+        <img className="w-12 h-12 mr-3" src={logo} alt="Logo" />
+        <span className="text-3xl text-slate-800 font-bold font-['Ubuntu']">
+          eGO Bus
+        </span>
+      </div>
 
       {/* Navigation Items */}
       <ul className="flex-1 px-4 py-6 space-y-2">
-        {[  
+        {[
           // Dashboard
           { to: "/management", label: "Dashboard", icon: faTachometerAlt, exact: true },
 
@@ -29,17 +41,19 @@ const Sidebar = () => {
           { to: "/management/students", label: "Students", icon: faUserGraduate },
 
           // Drivers
-          { to: "/management/drivers", label: "Drivers", icon: faUser },
+          { to: "/management/drivers", label: "Drivers", icon: faDriversLicense },
+
+          // profile
+          { to: "/management/profile", label: "Profile", icon: faUserCircle },
         ].map(({ to, label, icon, exact }) => (
           <li key={to}>
             <NavLink
               to={to}
-              end={exact} 
+              end={exact}
               className={({ isActive }) =>
-                `flex items-center space-x-3 p-3 transition-all duration-300 ${
-                  isActive
-                    ? "bg-white text-slate-900 font-bold rounded-lg shadow-md"
-                    : "hover:bg-yellow-400 hover:text-slate-800"
+                `flex items-center space-x-3 p-3 transition-all duration-300 ${isActive
+                  ? "bg-white text-slate-900 font-bold rounded-lg shadow-md"
+                  : "hover:bg-yellow-400 hover:text-slate-800"
                 }`
               }
             >

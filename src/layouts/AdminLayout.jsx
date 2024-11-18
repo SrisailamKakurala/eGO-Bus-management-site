@@ -1,5 +1,4 @@
 import Sidebar from '../components/specific/Sidebar/AdminSidebar';
-import Navbar from '../components/specific/Navbar/AdminNavbar';
 
 const AdminLayout = ({ children }) => {
   return (

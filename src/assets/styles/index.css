@@ -3,4 +3,11 @@
 @tailwind components;
 @tailwind utilities;
 
+.scroll-hidden::-webkit-scrollbar{
+    display: none;
+}
 
+.selected-black::selection{
+    color:black;
+    background: seashell;
+}

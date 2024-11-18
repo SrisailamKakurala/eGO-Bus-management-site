@@ -10,6 +10,7 @@ import Buses from '../pages/ManagementPages/Buses';
 import Students from '../pages/ManagementPages/Students';
 import Drivers from '../pages/ManagementPages/Drivers';
 import Upload from '../pages/ManagementPages/Upload';
+import Profile from '../pages/ManagementPages/Profile';
 
 const AppRoutes = () => {
   return (
@@ -19,13 +20,8 @@ const AppRoutes = () => {
         <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<AdminDashboard />} />
         </Route>
-        <Route path="/management" element={<ManagementLayout />}>
-          <Route index element={<ManagementDashboard />} />
-          <Route path="buses" element={<Buses />} />
-          <Route path="students" element={<Students />} />
-          <Route path="drivers" element={<Drivers />} />
-          <Route path="upload" element={<Upload />} />
-        </Route>
+        {/* Management Routes */}
+        <Route path="/management/*" element={<ManagementLayout />} />
       </Routes>
     </BrowserRouter>
   );
