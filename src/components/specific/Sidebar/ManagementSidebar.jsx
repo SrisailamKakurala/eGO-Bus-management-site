@@ -8,7 +8,8 @@ import {
   faUpload,
   faSignOutAlt,
   faUserCircle,
-  faDriversLicense
+  faDriversLicense,
+  faMessage
 } from "@fortawesome/free-solid-svg-icons";
 import logo from "../../../assets/images/logo.png";
 
@@ -42,6 +43,9 @@ const Sidebar = () => {
 
           // Drivers
           { to: "/management/drivers", label: "Drivers", icon: faDriversLicense },
+
+          // Notifications
+          { to: "/management/notifications", label: "Notifications", icon: faMessage },
 
           // profile
           { to: "/management/profile", label: "Profile", icon: faUserCircle },

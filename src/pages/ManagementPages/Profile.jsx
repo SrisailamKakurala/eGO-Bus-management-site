@@ -9,6 +9,9 @@ const Profile = ({ schoolData }) => {
   const [studentsCount, setStudentsCount] = useState(0);
   const [tripsCount, setTripsCount] = useState(0);
 
+  console.log(schoolData);
+
+
   const defaultOptions = {
     loop: true,
     autoplay: true,
@@ -20,41 +23,52 @@ const Profile = ({ schoolData }) => {
 
   useEffect(() => {
     if (schoolData) {
-      const incrementCounts = () => {
-        const { noOfBuses, buses } = schoolData;
-
-        const totalStudents = Object.values(buses).reduce(
-          (acc, bus) =>
-            acc +
-            Object.values(bus.trips || {}).reduce(
-              (tripAcc, trip) => tripAcc + Object.keys(trip.students || {}).length,
-              0
-            ),
-          0
-        );
-
-        const totalTrips = Object.values(buses).reduce(
-          (acc, bus) => acc + Object.keys(bus.trips || {}).length,
-          0
-        );
-
-        let count = 0;
-
-        const interval = setInterval(() => {
-          count++;
-          if (count <= noOfBuses) setBusesCount(count);
-          if (count <= totalStudents) setStudentsCount(count);
-          if (count <= totalTrips) setTripsCount(count);
-
-          if (count >= Math.max(noOfBuses, totalStudents, totalTrips)) {
-            clearInterval(interval);
-          }
-        }, 100); // Speed of animation
+      let count = 0;
+      const buses = schoolData.buses || {};
+      const noOfBuses = Object.keys(buses).length;
+  
+      if (noOfBuses === 0) return;
+  
+      const totalStudents = Object.values(buses).reduce(
+        (acc, bus) =>
+          acc +
+          Object.values(bus.trips || {}).reduce(
+            (tripAcc, trip) => tripAcc + Object.keys(trip.students || {}).length,
+            0
+          ),
+        0
+      );
+  
+      const totalTrips = Object.values(buses).reduce(
+        (acc, bus) => acc + Object.keys(bus.trips || {}).length,
+        0
+      );
+  
+      const interval = setInterval(() => {
+        count++;
+  
+        // Only update the state if the value has changed
+        if (count <= noOfBuses) {
+          setBusesCount(count);
+        }
+        if (count <= totalStudents) {
+          setStudentsCount(count);
+        }
+        if (count <= totalTrips) {
+          setTripsCount(count);
+        }
+  
+        if (count >= Math.max(noOfBuses, totalStudents, totalTrips)) {
+          clearInterval(interval); // Stop the interval when the max count is reached
+        }
+      }, 10); // Adjust the interval speed as needed
+  
+      return () => {
+        clearInterval(interval); // Cleanup on component unmount
       };
-
-      incrementCounts();
     }
   }, [schoolData]);
+  
 
   if (!schoolData) {
     return (
@@ -65,7 +79,9 @@ const Profile = ({ schoolData }) => {
     );
   }
 
-  const { schoolName, address } = schoolData;
+  console.log(studentsCount)
+
+  const { schoolName, address } = schoolData || {};
 
   return (
     <div className="p-8 bg-gradient-to-r from-blue-50 to-white rounded-lg shadow-lg">
@@ -75,18 +91,19 @@ const Profile = ({ schoolData }) => {
           <FontAwesomeIcon icon={faSchool} className="text-[#FCD32D]" />
         </div>
         <div className="flex flex-col gap-1">
-          <h1 className="text-4xl font-extrabold text-gray-800">{schoolName}</h1>
+          <h1 className="text-4xl font-extrabold text-gray-800">
+            {schoolName || "School Name"}
+          </h1>
           <p className="text-lg text-gray-500 mt-1">
             <FontAwesomeIcon icon={faMapMarkerAlt} className="text-blue-400 mr-2" />
-            {address}
+            {address || "School Address"}
           </p>
         </div>
       </div>
 
       {/* Stats Section */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {/* Buses */}
-        <div className="flex flex-col items-center bg-white shadow-md p-6 rounded-lg border-t-4 border-yellow-500 ">
+        <div className="flex flex-col items-center bg-white shadow-md p-6 rounded-lg border-t-4 border-yellow-500">
           <div className="text-4xl text-blue-500 mb-3">
             <FontAwesomeIcon icon={faBus} />
           </div>
@@ -94,8 +111,7 @@ const Profile = ({ schoolData }) => {
           <p className="text-lg text-gray-500">Buses</p>
         </div>
 
-        {/* Students */}
-        <div className="flex flex-col items-center bg-white shadow-md p-6 rounded-lg border-t-4 border-yellow-500 ">
+        <div className="flex flex-col items-center bg-white shadow-md p-6 rounded-lg border-t-4 border-yellow-500">
           <div className="text-4xl text-green-500 mb-3">
             <FontAwesomeIcon icon={faUserGraduate} />
           </div>
@@ -103,8 +119,7 @@ const Profile = ({ schoolData }) => {
           <p className="text-lg text-gray-500">Students</p>
         </div>
 
-        {/* Trips */}
-        <div className="flex flex-col items-center bg-white shadow-md p-6 rounded-lg border-t-4 border-yellow-500 ">
+        <div className="flex flex-col items-center bg-white shadow-md p-6 rounded-lg border-t-4 border-yellow-500">
           <div className="text-4xl text-yellow-500 mb-3">
             <FontAwesomeIcon icon={faRoute} />
           </div>
@@ -113,9 +128,9 @@ const Profile = ({ schoolData }) => {
         </div>
       </div>
 
-      {/* Animation */}{/* Lottie animation at the bottom */}
+      {/* Animation */}
       <div className="my-12 flex justify-center h-auto w-auto">
-        <Lottie options={defaultOptions} height={200} width='auto' />
+        <Lottie options={defaultOptions} height={200} width="auto" />
       </div>
     </div>
   );

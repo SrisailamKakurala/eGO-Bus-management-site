@@ -1,91 +1,19 @@
 import React, { useState } from "react";
-import { getDatabase, ref, set } from "firebase/database";
 import * as XLSX from "xlsx";
-import { app } from "../../configs/firebase.config";
+import { formatData, validateData } from "../../services/dataFormatter";
+import { uploadToFirebase } from "../../services/uploadService";
 
 const Upload = () => {
   const [progress, setProgress] = useState(0);
   const [uploadStatus, setUploadStatus] = useState("");
   const [error, setError] = useState("");
-
-  const formatData = (data) => {
-    const schools = {};
-    data.forEach((row) => {
-      const {
-        schoolID = "UnknownSchool",
-        schoolName = "Unnamed School",
-        address = "No Address",
-        noOfBuses = 0,
-        busID = "UnknownBus",
-        busNo = 0,
-        driverName = "No Driver",
-        driverMobile = "0000000000",
-        tripID = "UnknownTrip",
-        studentID = "UnknownStudent",
-        studentName = "No Name",
-        standard = "Unknown",
-        rollNo = 0,
-        parentName = "No Parent",
-        parentMobile = "0000000000",
-        lat = "0",
-        long = "0",
-      } = row;
-
-      if (!schools[schoolID]) {
-        schools[schoolID] = {
-          schoolName,
-          address,
-          noOfBuses: noOfBuses || 0,
-          buses: {},
-        };
-      }
-
-      if (!schools[schoolID].buses[busID]) {
-        schools[schoolID].buses[busID] = {
-          busNo,
-          driverName,
-          driverMobile,
-          trips: {},
-        };
-      }
-
-      if (!schools[schoolID].buses[busID].trips[tripID]) {
-        schools[schoolID].buses[busID].trips[tripID] = { students: {} };
-      }
-
-      schools[schoolID].buses[busID].trips[tripID].students[studentID] = {
-        studentName,
-        standard,
-        rollNo,
-        parentName,
-        parentMobile,
-      };
-    });
-    return schools;
-  };
-
-  const validateData = (data) => {
-    const isValid = JSON.stringify(data).indexOf("undefined") === -1;
-    if (!isValid) throw new Error("Data contains undefined values!");
-  };
-
-  const uploadToFirebase = async (formattedData) => {
-    try {
-      validateData(formattedData);
-      setUploadStatus("Uploading...");
-      const db = getDatabase(app);
-      await set(ref(db, "schools"), formattedData);
-      setUploadStatus("Upload Successful!");
-    } catch (error) {
-      setUploadStatus("Upload Failed");
-      setError(error.message);
-    }
-  };
+  const [formattedData, setFormattedData] = useState(null);
 
   const handleFileUpload = async (event) => {
     setProgress(0);
     setError("");
     setUploadStatus("");
+    setFormattedData(null);
 
     const file = event.target.files[0];
     if (!file) return;
@@ -100,23 +28,39 @@ const Upload = () => {
 
         setProgress(50);
 
-        const formattedData = formatData(sheetData);
-        setProgress(80);
-        uploadToFirebase(formattedData);
+        // Validate and Format Data
+        validateData(sheetData);
+        const formatted = formatData(sheetData);
 
+        setFormattedData(formatted); // Store formatted data for upload
         setProgress(100);
       };
       reader.readAsArrayBuffer(file);
     } catch (error) {
-      setError("Error processing file");
+      setError("Error processing file: " + error.message);
+    }
+  };
+
+  const confirmUpload = async () => {
+    if (!formattedData) {
+      setError("No data available to upload");
+      return;
+    }
+
+    try {
+      setUploadStatus("Uploading...");
+      const result = await uploadToFirebase(formattedData);
+      setUploadStatus(result);
+    } catch (error) {
+      setUploadStatus("Upload Failed");
+      setError(error.message);
     }
   };
 
   return (
     <div className="h-auto p-6 bg-white rounded-lg shadow-md">
-
       <h1 className="text-4xl font-bold text-[#FCD32D]">Upload Data</h1>
-      <hr className="border-t-1 border-gray-300 my-4" />
+      <hr className="border-t-1 border-gray-300 my-5" />
 
       {/* Download Sample File */}
       <div className="mt-4 mb-5">
@@ -130,7 +74,7 @@ const Upload = () => {
         <a
           href="/eGO_Bus_Flat_Structure.xlsx"
           download
-          className="bg-[#FCD32D] font-semibold text-white py-3 px-4  rounded-lg hover:bg-yellow-400 transition duration-300"
+          className="bg-[#FCD32D] font-semibold text-white py-3 px-4 rounded-lg hover:bg-yellow-400 transition duration-300"
         >
           Download Sample File
         </a>
@@ -138,17 +82,14 @@ const Upload = () => {
 
       <hr className="mt-12" />
 
-
-
-      {/* uploading file */}
-      <p className="text-slate-600 mb-5 mt-8">
+      {/* Upload File Section */}
+      <p className="text-slate-600 mb-5 mt-5">
         Please upload your Excel (.xlsx) file containing school data.{" "}
         <span className="text-black font-medium">
           Ensure all fields are properly filled.
         </span>
       </p>
 
-      {/* File Upload */}
       <div className="mb-6">
         <input
           type="file"
@@ -171,17 +112,25 @@ const Upload = () => {
         )}
       </div>
 
+      {/* Confirm and Upload Button */}
+      {formattedData && (
+        <div className="mt-4">
+          <button
+            onClick={confirmUpload}
+            className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg"
+          >
+            Confirm and Upload
+          </button>
+        </div>
+      )}
+
       {/* Upload Status */}
       {uploadStatus && (
-        <p className="mt-2 text-lg font-semibold text-green-500">
+        <p className="mt-2 text-lg font-semibold text-green-500 ">
           {uploadStatus}
         </p>
       )}
       {error && <p className="mt-2 text-red-500">Error: {error}</p>}
-
-
-
-
     </div>
   );
 };
