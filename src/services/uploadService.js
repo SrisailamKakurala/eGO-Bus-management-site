@@ -13,8 +13,12 @@ export const uploadToFirebase = async (formattedData) => {
   try {
     const schoolsRef = ref(db, "schools");
     await set(schoolsRef, formattedData);
-    return "Upload Successful!";
+
+    // Assuming `schoolID` is in the formattedData
+    const schoolID = Object.keys(formattedData)[0]; // Extract the first schoolID key
+    return { schoolID };
   } catch (error) {
     throw new Error("Upload Failed: " + error.message);
   }
 };
+

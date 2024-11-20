@@ -3,7 +3,7 @@ import { Routes, Route, Link } from 'react-router-dom';
 import Sidebar from '../components/specific/Sidebar/AdminSidebar';  
 // import { fetchAdminData } from '../services/fetchAdminData';  
 import Dashboard from '../pages/AdminPages/AdminDashboard';   
-import SchoolRegistration from '../pages/AdminPages/SchoolRegistration';  
+import RegisterSchool from '../pages/AdminPages/SchoolRegistration';  
 import SchoolManagement from '../pages/AdminPages/SchoolManagement';  
 import SendEmail from '../pages/AdminPages/SendEmail';  
 
@@ -30,7 +30,7 @@ const AdminLayout = () => {
       <div className="h-screen w-full p-4 overflow-y-auto">
         <Routes>
           <Route index element={<Dashboard adminData={adminData} />} />
-          <Route path="school-registration" element={<SchoolRegistration />} />
+          <Route path="school-registration" element={<RegisterSchool />} />
           <Route path="manage-schools" element={<SchoolManagement adminData={adminData} />} />
           <Route path="send-email" element={<SendEmail adminData={adminData} />} />
         </Routes>

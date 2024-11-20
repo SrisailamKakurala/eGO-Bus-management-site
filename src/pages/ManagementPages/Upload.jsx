@@ -3,7 +3,7 @@ import * as XLSX from "xlsx";
 import { formatData, validateData } from "../../services/dataFormatter";
 import { uploadToFirebase } from "../../services/uploadService";
 
-const Upload = () => {
+const Upload = ({ setTrigger }) => {
   const [progress, setProgress] = useState(0);
   const [uploadStatus, setUploadStatus] = useState("");
   const [error, setError] = useState("");
@@ -50,12 +50,23 @@ const Upload = () => {
     try {
       setUploadStatus("Uploading...");
       const result = await uploadToFirebase(formattedData);
-      setUploadStatus(result);
+
+      const { schoolID } = result;
+
+      if (schoolID) {
+        localStorage.setItem("schoolID", schoolID);
+        setTrigger((prev) => !prev); // Trigger re-fetch in Management Layout
+        setUploadStatus("Upload Successful");
+      } else {
+        throw new Error("schoolID not found in upload result");
+      }
     } catch (error) {
       setUploadStatus("Upload Failed");
       setError(error.message);
     }
   };
+
+
 
   return (
     <div className="h-auto p-6 bg-white rounded-lg shadow-md">

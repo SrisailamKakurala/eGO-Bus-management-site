@@ -18,19 +18,22 @@ const LoginPage = () => {
       setErrorMessage("Please enter both School ID and Password.");
       return;
     }
-
+  
     try {
       const authResponse = await authenticateUser(schoolID, password);
+  
       if (authResponse.isAdmin) {
+        localStorage.setItem('schoolID', schoolID);
         navigate("/admin"); // Navigate to admin dashboard
       } else {
-        navigate("/management"); // Navigate to management dashboard
+        localStorage.setItem('schoolID', schoolID);
+        navigate("/management"); // Navigate to management dashboard (school)
       }
     } catch (error) {
-      navigate("/management");
       setErrorMessage(error.message); // Display error message on login failure
     }
   };
+  
 
   return (
     <div className="flex h-screen w-screen overflow-hidden">
