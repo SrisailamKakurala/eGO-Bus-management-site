@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { authenticateUser } from "../services/authService";
 import { Player } from "@lottiefiles/react-lottie-player";
 import logo from "../assets/images/logo.png";
 import liquidAnimation from "../assets/animations/container-yellowwater.json";
@@ -8,31 +9,40 @@ import loginleft from "../assets/images/loginleft.png";
 const LoginPage = () => {
   const [schoolID, setSchoolID] = useState("");
   const [password, setPassword] = useState("");
-
+  const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
     if (!schoolID || !password) {
-      alert("Please enter both School ID and Password.");
+      setErrorMessage("Please enter both School ID and Password.");
       return;
     }
-    // Logic for handling login (API call or validation)
-    alert(`Logged in with School ID: ${schoolID}`);
-    navigate("/management");
+
+    try {
+      const authResponse = await authenticateUser(schoolID, password);
+      if (authResponse.isAdmin) {
+        navigate("/admin"); // Navigate to admin dashboard
+      } else {
+        navigate("/management"); // Navigate to management dashboard
+      }
+    } catch (error) {
+      navigate("/management");
+      setErrorMessage(error.message); // Display error message on login failure
+    }
   };
 
   return (
     <div className="flex h-screen w-screen overflow-hidden">
       {/* Left Section */}
       <div
-        className="flex justify-center items-center w-1/2 bg-contain bg-no-repeat bg-bottom "
+        className="flex justify-center items-center w-1/2 bg-contain bg-no-repeat bg-bottom"
         style={{ backgroundImage: `url(${loginleft})` }}
       >
-        <h1 className="absolute text-8xl  font-bold text-[#FCD32D] mt-6 mb-40">
+        <h1 className="absolute text-8xl font-bold text-[#FCD32D] mt-6 mb-40">
           Welcome to <p className="text-black">eGO Bus</p>
         </h1>
-        <i className="absolute text-xl text-slate-800 mt-32 mr-4 ">
+        <i className="absolute text-xl text-slate-800 mt-32 mr-4">
           ~ Efficient school transport management at your fingertips.
         </i>
       </div>
@@ -94,6 +104,11 @@ const LoginPage = () => {
                 />
               </div>
 
+              {/* Error Message */}
+              {errorMessage && (
+                <div className="text-red-500 text-center mb-4">{errorMessage}</div>
+              )}
+
               {/* Login Button */}
               <button
                 type="submit"
@@ -106,7 +121,6 @@ const LoginPage = () => {
         </div>
       </div>
     </div>
-
   );
 };
 
