@@ -1,2 +1,103 @@
+@Website/admin
+
+    admin credentials will be stored in firestore 
+        - id, pass (firestore)
+
+    admin logs in
+
+    admin register schools
+        - school dets (firestore)
+
+    admin manages schools based on subscription
+        - subscribed (firestore)
+
+    admin sends emails
+
+
+@Website/management
+
+    management logs in
+        - schoolId, password (firestore)
+
+    management downloads sample excel file
+
+    management uploads excel data
+        - data of school busses (rdb)
+
+    management can edit individual documents*****
+        - (rdb)
+
+
+
+
+
+@App/management
+
+home: 
+    management should be able to track busses 
+    (when bus moves while trip is enabled, we update the lat, lang of bus in rdb and it'll reflect in mngmt side)
+        - lat, lang of each bus
+
+notify:
+    management can send notifications to parents and drivers*****
+        - parentNotification, driverNotification (rdb)
+
+search:
+    management can search for details
+
+
+
+@App/parents
+
+home:
+    should be able to track the bus, with distance and time (for completing all the stops in b/w)
+    will recieve
+    notification when bus starts from school (when driver enables trip) - tripStartedNotification (if parentNotification changes in rdb)
+    notification when bus is near the point (calculate the dist b/w dest and curr bus location) - getReadyNotification (if parentNotification changes in rdb)
+    notification after attendence has been taken (when driver marks attendence) - attendenceNotification (if parentNotification changes in rdb)
+    notification on delays (driver posts) - parentNotification, managementNotification, sos
+    notification when bus readched the school (when driver disables trip) - tripEndedNotification (if parentNotification, managementNotification changes in rdb)
+    notification from management - if parentNotification changes in rdb
+    notification of missing items - parentNotification, missing items array
+
+driver dets:
+
+child dets:
+    should be able to alert driver with notification and also change the isComingToday field in the rdb, 
+    so lat and long of that particular student won't be shown in the map - driverNotification
+
+
+
+@App/drivers
+
+home:
+    selects trip and starts, map with all stops will be shown, and parents will be notified (parentNotification)
+
+sos:
+    send sos to management, sosNotification 
+
+attendence:
+    attendance of students of current and previous stop
+    if marked notification will be sent (parentNotification)
+
+missing items:
+    should be able to send missing items notification (parentNotification, missing items array)
+
+delay messages:
+    messages to parents and management of potential delay 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 admin/MmwTJpDWtFzHxd7zj2Vv/schoolsRegistered/{schoolId}/{schoolDetails}
 
