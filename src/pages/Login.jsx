@@ -1,39 +1,65 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { authenticateUser } from "../services/authService";
 import { Player } from "@lottiefiles/react-lottie-player";
 import logo from "../assets/images/logo.png";
 import liquidAnimation from "../assets/animations/container-yellowwater.json";
 import loginleft from "../assets/images/loginleft.png";
+import Loader from "../components/common/Loader";
+
 
 const LoginPage = () => {
   const [schoolID, setSchoolID] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [loading, setLoading] = useState(false); // Track loading state
   const navigate = useNavigate();
+
+  useEffect(() => {
+    // Check if schoolID exists in localStorage
+    const storedSchoolID = localStorage.getItem("schoolID");
+    if (storedSchoolID) {
+      setLoading(true);
+      setTimeout(() => {
+        setLoading(false);
+        navigate("/management"); // Redirect to management if already logged in
+      }, 1000); // Simulate loading time
+    }
+  }, [navigate]);
 
   const handleLogin = async (e) => {
     e.preventDefault();
+
     if (!schoolID || !password) {
       setErrorMessage("Please enter both School ID and Password.");
       return;
     }
-  
+
     try {
+      setLoading(true); // Show loader during login process
       const authResponse = await authenticateUser(schoolID, password);
-  
-      if (authResponse.isAdmin) {
-        localStorage.setItem('schoolID', schoolID);
-        navigate("/admin"); // Navigate to admin dashboard
-      } else {
-        localStorage.setItem('schoolID', schoolID);
-        navigate("/management"); // Navigate to management dashboard (school)
-      }
+
+      setTimeout(() => {
+        if (authResponse.isAdmin) {
+          localStorage.setItem('isAdmin', true);
+          navigate("/admin"); // Navigate to admin dashboard
+        } else {
+          localStorage.setItem("schoolID", schoolID);
+          navigate("/management"); // Navigate to management dashboard
+        }
+        setLoading(false);
+      }, 1000); // Simulate loading delay
     } catch (error) {
-      setErrorMessage(error.message); // Display error message on login failure
+      setLoading(false); // Hide loader if login fails
+      setErrorMessage(error.message);
     }
   };
-  
+
+  if (loading) {
+    return (
+      <Loader />
+    );
+  }
 
   return (
     <div className="flex h-screen w-screen overflow-hidden">

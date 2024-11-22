@@ -1,18 +1,13 @@
 // src/services/dataFormatter.js
 
-/**
- * Format raw Excel data into the required structure.
- * @param {Array} data - The raw data from Excel.
- * @returns {Object} - Formatted data structure.
- */
 export const formatData = (data) => {
   const schools = {};
+
   data.forEach((row) => {
     const {
       schoolID = "UnknownSchool",
       schoolName = "Unnamed School",
       address = "No Address",
-      noOfBuses = 0,
       busID = "UnknownBus",
       busNo = 0,
       driverName = "No Driver",
@@ -28,26 +23,42 @@ export const formatData = (data) => {
       long = "0",
     } = row;
 
+    // Ensure parentNotification is under the schoolID root level
     if (!schools[schoolID]) {
       schools[schoolID] = {
         schoolName,
         address,
-        noOfBuses: noOfBuses || 0,
+        noOfBuses: 0, // We'll calculate this automatically
         buses: {},
+        parentNotification: {
+          msg: "notification to all parents"
+        },  
+        sos: {
+          driverName: "No Driver",
+          msg: "No message",
+        },
       };
     }
 
+    // Increment number of buses
     if (!schools[schoolID].buses[busID]) {
+      schools[schoolID].noOfBuses += 1;
       schools[schoolID].buses[busID] = {
         busNo,
         driverName,
         driverMobile,
+        managementNotification: "",  // New field
+        driverNotification: "",  // New field
         trips: {},
       };
     }
 
     if (!schools[schoolID].buses[busID].trips[tripID]) {
-      schools[schoolID].buses[busID].trips[tripID] = { students: {} };
+      schools[schoolID].buses[busID].trips[tripID] = {
+        parentNotification: "",  // Add parentNotification at the trip level
+        missingItemNotification: { image: "", msg: "" },  // New field
+        students: {},
+      };
     }
 
     schools[schoolID].buses[busID].trips[tripID].students[studentID] = {
@@ -56,12 +67,17 @@ export const formatData = (data) => {
       rollNo,
       parentName,
       parentMobile,
+      profilePic: "",
       lat,
       long,
+      attendance: [],  // New field for attendance tracking
     };
   });
+
+  
   return schools;
 };
+
 
 /**
  * Validate data for missing required fields.

@@ -1,28 +1,36 @@
 import React, { useState, useEffect } from 'react';
-import { Routes, Route, Link } from 'react-router-dom';
+import { Routes, Route, useNavigate } from 'react-router-dom';
 import Sidebar from '../components/specific/Sidebar/AdminSidebar';  
-// import { fetchAdminData } from '../services/fetchAdminData';  
 import Dashboard from '../pages/AdminPages/AdminDashboard';   
 import RegisterSchool from '../pages/AdminPages/SchoolRegistration';  
 import SchoolManagement from '../pages/AdminPages/SchoolManagement';  
 import SendEmail from '../pages/AdminPages/SendEmail';  
+import Loader from '../components/common/Loader';
 
 const AdminLayout = () => {
   const [adminData, setAdminData] = useState(null);
+  const [loading, setLoading] = useState(false)
+  const navigate = useNavigate();
 
-  // Fetch admin data (like the list of schools, founders, etc.)
-  // useEffect(() => {
-  //   const getData = async () => {
-  //     try {
-  //       const data = await fetchAdminData();  // Fetching data for the admin
-  //       setAdminData(data);
-  //     } catch (error) {
-  //       console.error("Error fetching admin data:", error);
-  //     }
-  //   };
+  useEffect(() => {
 
-  //   getData();
-  // }, []);
+    const isAdmin = localStorage.getItem("isAdmin");
+    if (!isAdmin) {
+      setLoading(true);
+      setTimeout(() => {
+        setLoading(false);
+        navigate("/"); 
+      }, 1000);
+    }
+
+  }, [navigate]); 
+
+  if (loading) {
+    return (
+      <Loader />
+    );
+  }
+  
 
   return (
     <div className="flex flex-1 overflow-hidden bg-black">

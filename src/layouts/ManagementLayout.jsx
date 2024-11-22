@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useNavigate } from 'react-router-dom';
 import Sidebar from '../components/specific/Sidebar/ManagementSidebar';
+import Loader from '../components/common/Loader';
 
 import ManagementDashboard from '../pages/ManagementPages/ManagementDashboard';
 import Buses from '../pages/ManagementPages/Buses';
@@ -14,11 +15,25 @@ import { fetchSchoolData } from '../services/fetchSchoolData';  // Importing the
 
 const ManagementLayout = () => {
   const [schoolData, setSchoolData] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   // In the Management Layout
   const [trigger, setTrigger] = useState(false);
 
+  const navigate = useNavigate();
+
+
   useEffect(() => {
+
+    const storedSchoolID = localStorage.getItem("schoolID");
+    if (!storedSchoolID) {
+      setLoading(true);
+      setTimeout(() => {
+        setLoading(false);
+        navigate("/"); // Redirect to management if already logged in
+      }, 1000); // Simulate loading time
+    }
+
     const getData = async () => {
       try {
         const schoolID = localStorage.getItem("schoolID");
@@ -32,8 +47,13 @@ const ManagementLayout = () => {
     };
 
     getData();
-  }, [trigger]); // Refetch when `trigger` changes
+  }, [trigger, navigate]); // Refetch when `trigger` changes
 
+  if (loading) {
+    return (
+      <Loader />
+    );
+  }
 
   return (
     <div className="flex flex-1 overflow-hidden bg-slate-100">

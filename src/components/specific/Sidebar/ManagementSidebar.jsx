@@ -15,6 +15,12 @@ import logo from "../../../assets/images/logo.png";
 
 
 const Sidebar = () => {
+
+  const handleLogout = () => {
+    localStorage.clear();
+    window.location.reload();
+  }
+
   return (
     <div className="h-screen w-64 bg-[#FCD32D] text-slate-900 flex flex-col shadow-xl pt-50">
 
@@ -69,7 +75,7 @@ const Sidebar = () => {
       </ul>
 
       {/* Sign Out Button at the Bottom */}
-      <div className="mt-auto p-3">
+      <div className="mt-auto p-3" onClick={handleLogout}>
         <hr />
         <button
           className="flex items-center space-x-3 p-3 transition-all duration-300 hover:bg-yellow-400 hover:text-slate-800 w-full text-left"

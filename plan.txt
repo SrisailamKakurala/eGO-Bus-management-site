@@ -1,14 +1,14 @@
 @Website/admin
 
-    admin credentials will be stored in firestore 
+    admin credentials will be stored in firestore ✅
         - id, pass (firestore)
 
-    admin logs in
+    admin logs in ✅
 
-    admin register schools
+    admin register schools ✅
         - school dets (firestore)
 
-    admin manages schools based on subscription
+    admin manages schools based on subscription ✅
         - subscribed (firestore)
 
     admin sends emails
@@ -16,12 +16,12 @@
 
 @Website/management
 
-    management logs in
+    management logs in ✅
         - schoolId, password (firestore)
 
-    management downloads sample excel file
+    management downloads sample excel file ✅
 
-    management uploads excel data
+    management uploads excel data ✅
         - data of school busses (rdb)
 
     management can edit individual documents*****

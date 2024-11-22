@@ -21,4 +21,3 @@ export const uploadToFirebase = async (formattedData) => {
     throw new Error("Upload Failed: " + error.message);
   }
 };
-
