@@ -4,15 +4,14 @@ import { initializeApp } from "firebase/app";
 
 // Firebase Configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyDUK1wEhBcqEYiKHiD5k0APbefcmYXp9aE",
-  authDomain: "ego-bus-management-site.firebaseapp.com",
-  databaseURL: "https://ego-bus-management-site-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "ego-bus-management-site",
-  storageBucket: "ego-bus-management-site.firebasestorage.app",
-  messagingSenderId: "1081194864231",
-  appId: "1:1081194864231:web:91641f8d470ea5fe9a7ec2",
-  measurementId: "G-E54VR9TGT5",
-  databaseURL: "https://ego-bus-management-site-default-rtdb.asia-southeast1.firebasedatabase.app/",
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY, 
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  databaseURL: import.meta.env.VITE_FIREBASE_DATABASE_URL,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
 };
 
 // Initialize Firebase

@@ -13,6 +13,7 @@ export const formatData = (data) => {
       driverName = "No Driver",
       driverMobile = "0000000000",
       tripID = "UnknownTrip",
+      tripActiveStatus = "false",
       studentID = "UnknownStudent",
       studentName = "No Name",
       standard = "Unknown",
@@ -58,6 +59,7 @@ export const formatData = (data) => {
         parentNotification: "",  // Add parentNotification at the trip level
         missingItemNotification: { image: "", msg: "" },  // New field
         students: {},
+        tripActiveStatus,
       };
     }
 
@@ -70,7 +72,8 @@ export const formatData = (data) => {
       profilePic: "",
       lat,
       long,
-      attendance: [],  // New field for attendance tracking
+      attendance: [],
+      present: true,
     };
   });
 
