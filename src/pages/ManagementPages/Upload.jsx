@@ -49,9 +49,8 @@ const Upload = ({ setTrigger }) => {
 
     try {
       setUploadStatus("Uploading...");
-      const result = await uploadToFirebase(formattedData);
+      const { message, schoolID } = await uploadToFirebase(formattedData);
 
-      const { schoolID } = result;
 
       if (schoolID) {
         localStorage.setItem("schoolID", schoolID);

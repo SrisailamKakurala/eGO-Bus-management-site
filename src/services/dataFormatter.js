@@ -1,5 +1,3 @@
-// src/services/dataFormatter.js
-
 export const formatData = (data) => {
   const schools = {};
 
@@ -14,70 +12,115 @@ export const formatData = (data) => {
       driverMobile = "0000000000",
       tripID = "UnknownTrip",
       tripActiveStatus = "false",
+      pickupPointID = "UnknownPickupPoint",
+      lat,
+      long,
+      pickupTime = "00:00",
       studentID = "UnknownStudent",
       studentName = "No Name",
       standard = "Unknown",
       rollNo = 0,
       parentName = "No Parent",
       parentMobile = "0000000000",
-      lat = "0",
-      long = "0",
     } = row;
 
-    // Ensure parentNotification is under the schoolID root level
+    // Debugging logs
+    console.log(`Row Data: ${JSON.stringify(row)}`);
+    console.log(`Lat: ${lat}, Long: ${long}`);
+
+    // Ensure lat and long are valid before forming pickupLocation
+    const pickupLocation =
+      (lat && long && `${lat},${long}`) || "0,0";
+
+    console.log(`PickupLocation: ${pickupLocation}`);
+
+    // Ensure school-level structure
     if (!schools[schoolID]) {
       schools[schoolID] = {
         schoolName,
         address,
-        noOfBuses: 0, // We'll calculate this automatically
+        schoolLocation: "",
+        noOfBuses: 0,
         buses: {},
         parentNotification: {
-          msg: "notification to all parents"
-        },  
+          msg: "notification to all parents",
+        },
         sos: {
           driverName: "No Driver",
           msg: "No message",
         },
+        missingItemsFound: {},
+        missingItemsReturned: {},
+        studentsPresent: 0,
+        studentsAbsent: 0,
+        totalSosMsgs: 0,
+        totalNotificationsSent: 0,
       };
     }
 
-    // Increment number of buses
+    // Ensure bus-level structure
     if (!schools[schoolID].buses[busID]) {
       schools[schoolID].noOfBuses += 1;
       schools[schoolID].buses[busID] = {
         busNo,
         driverName,
         driverMobile,
-        managementNotification: "",  // New field
-        driverNotification: "",  // New field
+        managementNotification: "",
+        driverNotification: "",
         trips: {},
       };
     }
 
-    if (!schools[schoolID].buses[busID].trips[tripID]) {
-      schools[schoolID].buses[busID].trips[tripID] = {
-        parentNotification: "",  // Add parentNotification at the trip level
-        missingItemNotification: { image: "", msg: "" },  // New field
-        students: {},
+    // Ensure trip-level structure
+    const currentBus = schools[schoolID].buses[busID];
+    if (!currentBus.trips[tripID]) {
+      currentBus.trips[tripID] = {
         tripActiveStatus,
+        parentNotification: "",
+        missingItemNotification: { image: "", title: "", description: "" },
+        pickupPoints: [],
+        students: {}, // For all students under the trip
       };
     }
 
-    schools[schoolID].buses[busID].trips[tripID].students[studentID] = {
-      studentName,
-      standard,
-      rollNo,
-      parentName,
-      parentMobile,
-      profilePic: "",
-      lat,
-      long,
-      attendance: [],
-      present: true,
-    };
+    const currentTrip = currentBus.trips[tripID];
+
+    // Ensure pickup point exists for the trip
+    let pickupPoint = currentTrip.pickupPoints.find(
+      (point) => point.pickupPointID === pickupPointID
+    );
+
+    if (!pickupPoint) {
+      pickupPoint = {
+        pickupPointID,
+        pickupLocation,
+        pickupTime,
+        students: [],
+      };
+      currentTrip.pickupPoints.push(pickupPoint);
+    }
+
+    // Add student to the pickup point
+    pickupPoint.students.push({
+      studentID,
+      deviceToken: "", // Placeholder for device token
+    });
+
+    // Add student to the trip's `students` object (deduplicated by studentID)
+    if (!currentTrip.students[studentID]) {
+      currentTrip.students[studentID] = {
+        studentName,
+        standard,
+        rollNo,
+        parentName,
+        parentMobile,
+        pickupPointID,
+        pickupLocation,
+        pickupTime,
+      };
+    }
   });
 
-  
   return schools;
 };
 
