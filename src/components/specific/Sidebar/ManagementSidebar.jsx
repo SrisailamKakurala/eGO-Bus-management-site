@@ -27,7 +27,7 @@ const Sidebar = () => {
       {/* logo */}
       <div className="flex items-center m-auto py-5">
         <img className="w-12 h-12 mr-3" src={logo} alt="Logo" />
-        <span className="text-3xl text-slate-800 font-bold font-['Ubuntu']">
+        <span className="text-3xl text-blue-800 font-bold font-['Ubuntu']">
           eGO Bus
         </span>
       </div>
