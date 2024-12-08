@@ -77,7 +77,7 @@ export const formatData = (data) => {
       currentBus.trips[tripID] = {
         tripActiveStatus,
         parentNotification: "",
-        missingItemNotification: { image: "", title: "", description: "" },
+        missingItemNotification: {},
         pickupPoints: [],
         students: {}, // For all students under the trip
       };
