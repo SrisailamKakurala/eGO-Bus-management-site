@@ -117,6 +117,7 @@ export const formatData = (data) => {
         pickupPointID,
         pickupLocation,
         pickupTime,
+        attendance: []
       };
     }
   });
