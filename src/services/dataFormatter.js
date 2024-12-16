@@ -49,7 +49,7 @@ export const formatData = (data) => {
           driverName: "No Driver",
           msg: "No message",
         },
-        missingItemsFound: 0,
+        missingItemsCount: 0,
         studentsPresent: 0,
         studentsAbsent: 0,
         totalSosMsgs: 0,
