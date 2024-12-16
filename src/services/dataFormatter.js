@@ -67,6 +67,7 @@ export const formatData = (data) => {
         driverMobile,
         managementNotification: "",
         driverNotification: "",
+        missingItemNotification: {},
         trips: {},
       };
     }
@@ -77,7 +78,6 @@ export const formatData = (data) => {
       currentBus.trips[tripID] = {
         tripActiveStatus,
         parentNotification: "",
-        missingItemNotification: {},
         pickupPoints: [],
         students: {}, // For all students under the trip
       };
