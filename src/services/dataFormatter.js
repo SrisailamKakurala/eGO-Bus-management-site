@@ -42,9 +42,6 @@ export const formatData = (data) => {
         schoolLocation: "",
         noOfBuses: 0,
         buses: {},
-        parentNotification: {
-          msg: "notification to all parents",
-        },
         sos: {
           driverName: "No Driver",
           msg: "No message",
@@ -64,8 +61,6 @@ export const formatData = (data) => {
         busNo,
         driverName,
         driverMobile,
-        managementNotification: "",
-        driverNotification: "",
         missingItemNotification: {},
         trips: {},
       };
@@ -76,7 +71,6 @@ export const formatData = (data) => {
     if (!currentBus.trips[tripID]) {
       currentBus.trips[tripID] = {
         tripActiveStatus,
-        parentNotification: "",
         pickupPoints: [],
         students: {}, // For all students under the trip
       };
