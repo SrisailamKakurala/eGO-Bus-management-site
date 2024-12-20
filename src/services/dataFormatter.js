@@ -102,7 +102,8 @@ export const formatData = (data) => {
     // Add student to the pickup point
     pickupPoint.students.push({
       studentID,
-      deviceToken: "", // Placeholder for device token
+      deviceToken: "",
+      attendanceStatus: "present"
     });
 
     // Add student to the trip's `students` object (deduplicated by studentID)
