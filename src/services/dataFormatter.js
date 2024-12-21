@@ -2,6 +2,13 @@ export const formatData = (data) => {
   const schools = {};
 
   data.forEach((row) => {
+    // Normalize keys by trimming whitespace
+    const normalizedRow = {};
+    Object.keys(row).forEach((key) => {
+      normalizedRow[key.trim()] = row[key];
+    });
+
+    // Extract values using normalized keys
     const {
       schoolID = "UnknownSchool",
       schoolName = "Unnamed School",
@@ -22,17 +29,9 @@ export const formatData = (data) => {
       rollNo = 0,
       parentName = "No Parent",
       parentMobile = "0000000000",
-    } = row;
+    } = normalizedRow;
 
-    // Debugging logs
-    console.log(`Row Data: ${JSON.stringify(row)}`);
-    console.log(`Lat: ${lat}, Long: ${long}`);
-
-    // Ensure lat and long are valid before forming pickupLocation
-    const pickupLocation =
-      (lat && long && `${lat},${long}`) || "0,0";
-
-    console.log(`PickupLocation: ${pickupLocation}`);
+    const pickupLocation = (lat && long && `${lat},${long}`) || "0,0";
 
     // Ensure school-level structure
     if (!schools[schoolID]) {
@@ -97,7 +96,7 @@ export const formatData = (data) => {
     pickupPoint.students.push({
       studentID,
       deviceToken: "",
-      attendanceStatus: "present"
+      attendanceStatus: "present",
     });
 
     // Add student to the trip's `students` object (deduplicated by studentID)
@@ -111,30 +110,10 @@ export const formatData = (data) => {
         pickupPointID,
         pickupLocation,
         pickupTime,
-        attendance: []
+        attendance: [],
       };
     }
   });
 
   return schools;
-};
-
-
-/**
- * Validate data for missing required fields.
- * @param {Array} data - Raw data to validate.
- * @throws {Error} If validation fails.
- */
-export const validateData = (data) => {
-  if (!Array.isArray(data)) {
-    throw new Error("Invalid data format. Expected an array.");
-  }
-
-  data.forEach((row, index) => {
-    if (!row.schoolID || !row.busID || !row.studentID) {
-      throw new Error(
-        `Missing mandatory fields at row ${index + 1}: schoolID, busID, or studentID`
-      );
-    }
-  });
 };
